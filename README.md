@@ -1,4 +1,4 @@
-# pathfitfinder
+# fluttest
 
 A new Flutter project.
 
