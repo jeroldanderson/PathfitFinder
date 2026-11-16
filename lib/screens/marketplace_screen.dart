@@ -225,7 +225,7 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
                     ),
                     SizedBox(height: 8),
                     Text(
-                      'JEROLD',
+                      'A new home for your old uniform.',
                       style: TextStyle(
                         fontSize: 23,
                         fontWeight: FontWeight.w700,
