@@ -1,0 +1,13 @@
+specVersion: "v1alpha"
+serviceId: "pathfitfinder"
+location: "asia-southeast1"
+schemas:
+  - source: "./schema"
+    datasource:
+      postgresql:
+        database: "pathfitfinder-2-database"
+        cloudSql:
+          instanceId: "pathfitfinder-instance"
+          # schemaValidation: "STRICT"     # STRICT mode makes Postgres schema match Data Connect exactly.
+          # schemaValidation: "COMPATIBLE" # COMPATIBLE mode makes Postgres schema compatible with Data Connect.
+connectorDirs: ["./example"]

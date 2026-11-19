@@ -1,0 +1,4 @@
+mutation UpsertUser($username: String!) @auth(level: USER) {
+  # The "auth.uid" server value ensures that users can only register their own user.
+  user_upsert(data: { id_expr: "auth.uid", username: $username })
+}
