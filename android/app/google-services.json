@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "480979260432",
+    "firebase_url": "https://pathfitfinder-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "pathfitfinder",
+    "storage_bucket": "pathfitfinder.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:480979260432:android:3043cc4eff269c1d1ee695",
+        "android_client_info": {
+          "package_name": "com.example.pathfitfinder"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhfrQbKZFI9jU_XiUObBeSxFpkKCMGDIE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

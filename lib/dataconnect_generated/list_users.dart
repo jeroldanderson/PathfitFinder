@@ -19,11 +19,21 @@ class ListUsersVariablesBuilder {
 @immutable
 class ListUsersUsers {
   final String id;
-  final String username;
+  final String email;
+  final String fullName;
+  final EnumValue<UserRole> role;
+  final String? collegeOrFaculty;
+  final int? batchYear;
+  final EnumValue<VerificationStatus> verificationStatus;
   ListUsersUsers.fromJson(dynamic json):
   
   id = nativeFromJson<String>(json['id']),
-  username = nativeFromJson<String>(json['username']);
+  email = nativeFromJson<String>(json['email']),
+  fullName = nativeFromJson<String>(json['fullName']),
+  role = userRoleDeserializer(json['role']),
+  collegeOrFaculty = json['collegeOrFaculty'] == null ? null : nativeFromJson<String>(json['collegeOrFaculty']),
+  batchYear = json['batchYear'] == null ? null : nativeFromJson<int>(json['batchYear']),
+  verificationStatus = verificationStatusDeserializer(json['verificationStatus']);
   @override
   bool operator ==(Object other) {
     if(identical(this, other)) {
@@ -35,23 +45,46 @@ class ListUsersUsers {
 
     final ListUsersUsers otherTyped = other as ListUsersUsers;
     return id == otherTyped.id && 
-    username == otherTyped.username;
+    email == otherTyped.email && 
+    fullName == otherTyped.fullName && 
+    role == otherTyped.role && 
+    collegeOrFaculty == otherTyped.collegeOrFaculty && 
+    batchYear == otherTyped.batchYear && 
+    verificationStatus == otherTyped.verificationStatus;
     
   }
   @override
-  int get hashCode => Object.hashAll([id.hashCode, username.hashCode]);
+  int get hashCode => Object.hashAll([id.hashCode, email.hashCode, fullName.hashCode, role.hashCode, collegeOrFaculty.hashCode, batchYear.hashCode, verificationStatus.hashCode]);
   
 
   Map<String, dynamic> toJson() {
     Map<String, dynamic> json = {};
     json['id'] = nativeToJson<String>(id);
-    json['username'] = nativeToJson<String>(username);
+    json['email'] = nativeToJson<String>(email);
+    json['fullName'] = nativeToJson<String>(fullName);
+    json['role'] = 
+    userRoleSerializer(role)
+    ;
+    if (collegeOrFaculty != null) {
+      json['collegeOrFaculty'] = nativeToJson<String?>(collegeOrFaculty);
+    }
+    if (batchYear != null) {
+      json['batchYear'] = nativeToJson<int?>(batchYear);
+    }
+    json['verificationStatus'] = 
+    verificationStatusSerializer(verificationStatus)
+    ;
     return json;
   }
 
   ListUsersUsers({
     required this.id,
-    required this.username,
+    required this.email,
+    required this.fullName,
+    required this.role,
+    this.collegeOrFaculty,
+    this.batchYear,
+    required this.verificationStatus,
   });
 }
 

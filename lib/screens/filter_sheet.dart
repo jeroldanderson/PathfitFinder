@@ -86,7 +86,7 @@ class _FilterSheetState extends State<FilterSheet> {
                   const SizedBox(height: 24),
                   ChoiceGroup(
                     'Sport type',
-                    const ['All sports', 'Basketball', 'Volleyball', 'Fitness'],
+                    ['All sports', ...kPathFitSports],
                     sport,
                     (v) => setState(() => sport = v),
                   ),

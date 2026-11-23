@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../controllers/listing_editor_controller.dart';
 import '../controllers/marketplace_controller.dart';
+import '../dataconnect_generated/generated.dart';
 import '../models/listing.dart';
 import '../theme.dart';
 import '../widgets/shared.dart';
@@ -33,18 +35,53 @@ class _SellScreenState extends State<SellScreen> {
     super.dispose();
   }
 
-  void _save() {
+  Future<void> _save() async {
     final formValid = _form.currentState!.validate();
     final photosValid = _editor.validatePhotos();
     if (!formValid || !photosValid) return;
-    widget.market.save(_editor.buildListing());
-    showNotice(
-      context,
-      _editing
-          ? 'Preview listing updated for this session.'
-          : 'Listing added to the preview for this session.',
-    );
-    Navigator.pop(context);
+
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) {
+      showNotice(
+        context,
+        "You're in preview mode only. Sign in with your @ust.edu.ph account to publish listings.",
+      );
+      return;
+    }
+
+    try {
+      final email = currentUser.email!.trim().toLowerCase();
+      final userRes = await ExampleConnector.instance
+          .getUserByEmail(email: email)
+          .execute();
+      final status = userRes.data.users.isNotEmpty
+          ? userRes.data.users.first.verificationStatus.stringValue
+          : 'PENDING';
+      if (status != 'VERIFIED') {
+        if (!mounted) return;
+        showNotice(
+          context,
+          status == 'REJECTED'
+              ? 'Your UST ID submission was rejected. Contact the team for re-verification.'
+              : 'Your UST ID or Registration Form is still under review. You can browse while waiting for approval.',
+        );
+        return;
+      }
+
+      await widget.market.save(_editor.buildListing());
+      if (!mounted) return;
+      showNotice(
+        context,
+        _editing ? 'Listing updated.' : 'Listing published to marketplace.',
+      );
+      Navigator.pop(context);
+    } catch (_) {
+      if (!mounted) return;
+      showNotice(
+        context,
+        widget.market.error ?? 'Could not save listing. Please try again.',
+      );
+    }
   }
 
   Future<void> _delete() async {
@@ -62,7 +99,7 @@ class _SellScreenState extends State<SellScreen> {
             ),
             const SizedBox(height: 12),
             const Text(
-              'This removes your preview listing. If it found a new home, mark it as sold instead to keep it in your history.',
+              'This removes your listing from the marketplace. If it found a new home, mark it as sold instead to keep it in your history.',
             ),
           ],
         ),
@@ -82,8 +119,11 @@ class _SellScreenState extends State<SellScreen> {
       ),
     );
     if (confirmed == true && mounted) {
-      widget.market.delete(widget.existing!.id);
-      Navigator.pop(context);
+      await widget.market.delete(widget.existing!.id);
+      if (mounted) {
+        showNotice(context, 'Listing deleted.');
+        Navigator.pop(context);
+      }
     }
   }
 
@@ -101,7 +141,7 @@ class _SellScreenState extends State<SellScreen> {
                     widget.market.saveDraft(_editor.buildListing());
                     showNotice(
                       context,
-                      'Draft saved for this preview session.',
+                      'Draft saved on this device. You can continue editing later.',
                     );
                   },
             child: Text(
@@ -326,7 +366,7 @@ class _SellScreenState extends State<SellScreen> {
                     'Korfball',
                     'Sepak Takraw',
                     'Softball',
-                    'Volleyball'
+                    'Volleyball',
                   ], (v) => _editor.sport = v),
                 ),
                 Row(
@@ -416,12 +456,17 @@ class _SellScreenState extends State<SellScreen> {
                   ),
                 ),
                 const Text(
-                  'Preview only. Listings and drafts last for this session.',
+                  'Listings are visible to fellow Thomasians only. Avoid sharing personal information in your description.',
                   style: TextStyle(fontSize: 11, color: muted),
                 ),
                 const SizedBox(height: 16),
                 PrimaryButton(
-                  _editing ? 'Save Changes' : 'Publish preview listing',
+                  _editing
+                      ? 'Save Changes'
+                      : (FirebaseAuth.instance.currentUser == null
+                            ? 'Publish preview listing'
+                            : 'Publish listing'),
+                  loading: widget.market.loading,
                   onPressed: _save,
                 ),
               ],

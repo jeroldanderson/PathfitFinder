@@ -8,6 +8,11 @@ class RegistrationRequest {
   final String username, email, password, verificationPath;
 }
 
+class AuthFailure implements Exception {
+  const AuthFailure(this.message);
+  final String message;
+}
+
 class AuthUnavailable implements Exception {
   const AuthUnavailable();
   String get message =>

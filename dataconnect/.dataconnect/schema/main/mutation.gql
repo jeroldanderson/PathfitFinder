@@ -1,5 +1,59 @@
 extend type Mutation {
   """
+  ✨ Insert a single `Conversation` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  conversation_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: Conversation_Data!
+  ): Conversation_KeyOutput! @fdc_generated(from: "Conversation", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `Listing` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  listing_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: Listing_Data!
+  ): Listing_KeyOutput! @fdc_generated(from: "Listing", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `ListingHistory` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  listingHistory_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: ListingHistory_Data!
+  ): ListingHistory_KeyOutput! @fdc_generated(from: "ListingHistory", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `ListingImage` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  listingImage_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: ListingImage_Data!
+  ): ListingImage_KeyOutput! @fdc_generated(from: "ListingImage", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `Message` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  message_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: Message_Data!
+  ): Message_KeyOutput! @fdc_generated(from: "Message", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `Notification` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  notification_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: Notification_Data!
+  ): Notification_KeyOutput! @fdc_generated(from: "Notification", purpose: INSERT_SINGLE)
+  """
   ✨ Insert a single `User` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
   """
   user_insert(
@@ -8,6 +62,69 @@ extend type Mutation {
     """
     data: User_Data!
   ): User_KeyOutput! @fdc_generated(from: "User", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert a single `VerificationSubmission` into the table and return its key. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  verificationSubmission_insert(
+    """
+    Data object to insert into the table.
+    """
+    data: VerificationSubmission_Data!
+  ): VerificationSubmission_KeyOutput! @fdc_generated(from: "VerificationSubmission", purpose: INSERT_SINGLE)
+  """
+  ✨ Insert `Conversation` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  conversation_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [Conversation_Data!]!
+  ): [Conversation_KeyOutput!]! @fdc_generated(from: "Conversation", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `Listing` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  listing_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [Listing_Data!]!
+  ): [Listing_KeyOutput!]! @fdc_generated(from: "Listing", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `ListingHistory` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  listingHistory_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [ListingHistory_Data!]!
+  ): [ListingHistory_KeyOutput!]! @fdc_generated(from: "ListingHistory", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `ListingImage` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  listingImage_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [ListingImage_Data!]!
+  ): [ListingImage_KeyOutput!]! @fdc_generated(from: "ListingImage", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `Message` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  message_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [Message_Data!]!
+  ): [Message_KeyOutput!]! @fdc_generated(from: "Message", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert `Notification` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  notification_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [Notification_Data!]!
+  ): [Notification_KeyOutput!]! @fdc_generated(from: "Notification", purpose: INSERT_MULTIPLE)
   """
   ✨ Insert `User` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
   """
@@ -18,6 +135,69 @@ extend type Mutation {
     data: [User_Data!]!
   ): [User_KeyOutput!]! @fdc_generated(from: "User", purpose: INSERT_MULTIPLE)
   """
+  ✨ Insert `VerificationSubmission` objects into the table and return their keys. Columns not specified in `data` will receive defaults (e.g. `null`).
+  """
+  verificationSubmission_insertMany(
+    """
+    List of data objects to insert into the table.
+    """
+    data: [VerificationSubmission_Data!]!
+  ): [VerificationSubmission_KeyOutput!]! @fdc_generated(from: "VerificationSubmission", purpose: INSERT_MULTIPLE)
+  """
+  ✨ Insert or update a single `Conversation` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Conversation`.
+  """
+  conversation_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: Conversation_Data!
+  ): Conversation_KeyOutput! @fdc_generated(from: "Conversation", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `Listing` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Listing`.
+  """
+  listing_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: Listing_Data!
+  ): Listing_KeyOutput! @fdc_generated(from: "Listing", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `ListingHistory` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `ListingHistory`.
+  """
+  listingHistory_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: ListingHistory_Data!
+  ): ListingHistory_KeyOutput! @fdc_generated(from: "ListingHistory", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `ListingImage` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `ListingImage`.
+  """
+  listingImage_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: ListingImage_Data!
+  ): ListingImage_KeyOutput! @fdc_generated(from: "ListingImage", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `Message` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Message`.
+  """
+  message_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: Message_Data!
+  ): Message_KeyOutput! @fdc_generated(from: "Message", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `Notification` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Notification`.
+  """
+  notification_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: Notification_Data!
+  ): Notification_KeyOutput! @fdc_generated(from: "Notification", purpose: UPSERT_SINGLE)
+  """
   ✨ Insert or update a single `User` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `User`.
   """
   user_upsert(
@@ -26,6 +206,69 @@ extend type Mutation {
     """
     data: User_Data!
   ): User_KeyOutput! @fdc_generated(from: "User", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update a single `VerificationSubmission` into the table, based on the primary key. Returns the key of the newly inserted or existing updated `VerificationSubmission`.
+  """
+  verificationSubmission_upsert(
+    """
+    Data object to insert or update if it already exists.
+    """
+    data: VerificationSubmission_Data!
+  ): VerificationSubmission_KeyOutput! @fdc_generated(from: "VerificationSubmission", purpose: UPSERT_SINGLE)
+  """
+  ✨ Insert or update `Conversation` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Conversation`.
+  """
+  conversation_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [Conversation_Data!]!
+  ): [Conversation_KeyOutput!]! @fdc_generated(from: "Conversation", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `Listing` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Listing`.
+  """
+  listing_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [Listing_Data!]!
+  ): [Listing_KeyOutput!]! @fdc_generated(from: "Listing", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `ListingHistory` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `ListingHistory`.
+  """
+  listingHistory_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [ListingHistory_Data!]!
+  ): [ListingHistory_KeyOutput!]! @fdc_generated(from: "ListingHistory", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `ListingImage` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `ListingImage`.
+  """
+  listingImage_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [ListingImage_Data!]!
+  ): [ListingImage_KeyOutput!]! @fdc_generated(from: "ListingImage", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `Message` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Message`.
+  """
+  message_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [Message_Data!]!
+  ): [Message_KeyOutput!]! @fdc_generated(from: "Message", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Insert or update `Notification` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `Notification`.
+  """
+  notification_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [Notification_Data!]!
+  ): [Notification_KeyOutput!]! @fdc_generated(from: "Notification", purpose: UPSERT_MULTIPLE)
   """
   ✨ Insert or update `User` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `User`.
   """
@@ -36,18 +279,166 @@ extend type Mutation {
     data: [User_Data!]!
   ): [User_KeyOutput!]! @fdc_generated(from: "User", purpose: UPSERT_MULTIPLE)
   """
+  ✨ Insert or update `VerificationSubmission` objects into the table, based on the primary key. Returns the key of the newly inserted or existing updated `VerificationSubmission`.
+  """
+  verificationSubmission_upsertMany(
+    """
+    List of data objects to insert or update if it already exists.
+    """
+    data: [VerificationSubmission_Data!]!
+  ): [VerificationSubmission_KeyOutput!]! @fdc_generated(from: "VerificationSubmission", purpose: UPSERT_MULTIPLE)
+  """
+  ✨ Update a single `Conversation` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `Conversation` or `null` if not found.
+  """
+  conversation_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Conversation_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Conversation_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: Conversation_Data!
+  ): Conversation_KeyOutput @fdc_generated(from: "Conversation", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `Listing` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `Listing` or `null` if not found.
+  """
+  listing_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Listing_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Listing_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: Listing_Data!
+  ): Listing_KeyOutput @fdc_generated(from: "Listing", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `ListingHistory` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `ListingHistory` or `null` if not found.
+  """
+  listingHistory_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: ListingHistory_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: ListingHistory_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: ListingHistory_Data!
+  ): ListingHistory_KeyOutput @fdc_generated(from: "ListingHistory", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `ListingImage` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `ListingImage` or `null` if not found.
+  """
+  listingImage_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: ListingImage_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: ListingImage_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: ListingImage_Data!
+  ): ListingImage_KeyOutput @fdc_generated(from: "ListingImage", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `Message` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `Message` or `null` if not found.
+  """
+  message_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Message_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Message_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: Message_Data!
+  ): Message_KeyOutput @fdc_generated(from: "Message", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `Notification` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `Notification` or `null` if not found.
+  """
+  notification_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Notification_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Notification_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: Notification_Data!
+  ): Notification_KeyOutput @fdc_generated(from: "Notification", purpose: UPDATE_SINGLE)
+  """
   ✨ Update a single `User` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `User` or `null` if not found.
   """
   user_update(
     """
     The unique ID of the object.
     """
-    id: String
-
-    """
-    ✨ `_expr` server value variant of `id` (The unique ID of the object.)
-    """
-    id_expr: String_Expr
+    id: UUID
 
     """
     The key used to identify the object.
@@ -64,6 +455,144 @@ extend type Mutation {
     """
     data: User_Data!
   ): User_KeyOutput @fdc_generated(from: "User", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update a single `VerificationSubmission` based on `id`, `key` or `first`, setting columns specified in `data`. Returns the key of the updated `VerificationSubmission` or `null` if not found.
+  """
+  verificationSubmission_update(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: VerificationSubmission_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: VerificationSubmission_FirstRow
+
+    """
+    Data object containing fields to be updated.
+    """
+    data: VerificationSubmission_Data!
+  ): VerificationSubmission_KeyOutput @fdc_generated(from: "VerificationSubmission", purpose: UPDATE_SINGLE)
+  """
+  ✨ Update `Conversation` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  conversation_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: Conversation_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: Conversation_Data!
+  ): Int! @fdc_generated(from: "Conversation", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `Listing` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  listing_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: Listing_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: Listing_Data!
+  ): Int! @fdc_generated(from: "Listing", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `ListingHistory` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  listingHistory_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: ListingHistory_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: ListingHistory_Data!
+  ): Int! @fdc_generated(from: "ListingHistory", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `ListingImage` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  listingImage_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: ListingImage_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: ListingImage_Data!
+  ): Int! @fdc_generated(from: "ListingImage", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `Message` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  message_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: Message_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: Message_Data!
+  ): Int! @fdc_generated(from: "Message", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Update `Notification` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  notification_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: Notification_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: Notification_Data!
+  ): Int! @fdc_generated(from: "Notification", purpose: UPDATE_MULTIPLE)
   """
   ✨ Update `User` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
   """
@@ -84,18 +613,146 @@ extend type Mutation {
     data: User_Data!
   ): Int! @fdc_generated(from: "User", purpose: UPDATE_MULTIPLE)
   """
+  ✨ Update `VerificationSubmission` objects matching `where` conditions (or `all`, if true) according to `data`. Returns the number of rows updated.
+  """
+  verificationSubmission_updateMany(
+    """
+    Filter condition to specify which rows to update.
+    """
+    where: VerificationSubmission_Filter
+
+    """
+    Set to true to update all rows.
+    """
+    all: Boolean = false
+
+    """
+    Data object containing fields to update.
+    """
+    data: VerificationSubmission_Data!
+  ): Int! @fdc_generated(from: "VerificationSubmission", purpose: UPDATE_MULTIPLE)
+  """
+  ✨ Delete a single `Conversation` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  conversation_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Conversation_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Conversation_FirstRow
+  ): Conversation_KeyOutput @fdc_generated(from: "Conversation", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `Listing` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  listing_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Listing_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Listing_FirstRow
+  ): Listing_KeyOutput @fdc_generated(from: "Listing", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `ListingHistory` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  listingHistory_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: ListingHistory_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: ListingHistory_FirstRow
+  ): ListingHistory_KeyOutput @fdc_generated(from: "ListingHistory", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `ListingImage` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  listingImage_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: ListingImage_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: ListingImage_FirstRow
+  ): ListingImage_KeyOutput @fdc_generated(from: "ListingImage", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `Message` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  message_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Message_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Message_FirstRow
+  ): Message_KeyOutput @fdc_generated(from: "Message", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `Notification` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  notification_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: Notification_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: Notification_FirstRow
+  ): Notification_KeyOutput @fdc_generated(from: "Notification", purpose: DELETE_SINGLE)
+  """
   ✨ Delete a single `User` based on `id`, `key` or `first` and return its key (or `null` if not found).
   """
   user_delete(
     """
     The unique ID of the object.
     """
-    id: String
-
-    """
-    ✨ `_expr` server value variant of `id` (The unique ID of the object.)
-    """
-    id_expr: String_Expr
+    id: UUID
 
     """
     The key used to identify the object.
@@ -107,6 +764,109 @@ extend type Mutation {
     """
     first: User_FirstRow
   ): User_KeyOutput @fdc_generated(from: "User", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete a single `VerificationSubmission` based on `id`, `key` or `first` and return its key (or `null` if not found).
+  """
+  verificationSubmission_delete(
+    """
+    The unique ID of the object.
+    """
+    id: UUID
+
+    """
+    The key used to identify the object.
+    """
+    key: VerificationSubmission_Key
+
+    """
+    Fetch the first row based on the filters and ordering.
+    """
+    first: VerificationSubmission_FirstRow
+  ): VerificationSubmission_KeyOutput @fdc_generated(from: "VerificationSubmission", purpose: DELETE_SINGLE)
+  """
+  ✨ Delete `Conversation` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  conversation_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: Conversation_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "Conversation", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `Listing` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  listing_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: Listing_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "Listing", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `ListingHistory` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  listingHistory_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: ListingHistory_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "ListingHistory", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `ListingImage` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  listingImage_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: ListingImage_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "ListingImage", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `Message` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  message_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: Message_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "Message", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `Notification` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  notification_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: Notification_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "Notification", purpose: DELETE_MULTIPLE)
   """
   ✨ Delete `User` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
   """
@@ -121,4 +881,18 @@ extend type Mutation {
     """
     all: Boolean = false
   ): Int! @fdc_generated(from: "User", purpose: DELETE_MULTIPLE)
+  """
+  ✨ Delete `VerificationSubmission` objects matching `where` conditions (or `all`, if true). Returns the number of rows deleted.
+  """
+  verificationSubmission_deleteMany(
+    """
+    Filter condition to specify which rows to delete.
+    """
+    where: VerificationSubmission_Filter
+
+    """
+    Set to true to delete all rows.
+    """
+    all: Boolean = false
+  ): Int! @fdc_generated(from: "VerificationSubmission", purpose: DELETE_MULTIPLE)
 }

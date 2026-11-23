@@ -1,3 +1,28 @@
+const List<String> kPathFitSports = [
+  'Fitness',
+  'Arnis',
+  'Badminton',
+  'Pickle Ball',
+  'Spike Ball',
+  'Swimming',
+  'Table Tennis',
+  'Taekwondo',
+  'Track and Field',
+  'Folk Dance',
+  'Social Dance',
+  'Philippine Games',
+  'Adapted PE',
+  'Basketball',
+  'Beach Volleyball',
+  'Football',
+  'Futsal',
+  'Handball',
+  'Korfball',
+  'Sepak Takraw',
+  'Softball',
+  'Volleyball',
+];
+
 class Listing {
   const Listing({
     required this.id,
@@ -11,8 +36,13 @@ class Listing {
     this.number = '',
     this.included = 'Complete set',
     this.description = '',
+    this.sellerName = 'Thomasian Seller',
+    this.sellerCollege = '',
+    this.sellerAvatarUrl,
+    this.sellerVerified = false,
     this.owned = false,
     this.sold = false,
+    this.deleted = false,
   });
   final String id,
       title,
@@ -22,10 +52,14 @@ class Listing {
       condition,
       number,
       included,
-      description;
+      description,
+      sellerName,
+      sellerCollege;
+  final String? sellerAvatarUrl;
   final int price;
   final List<String> images;
-  final bool owned, sold;
+  final bool sellerVerified, owned, sold, deleted;
+
   Listing copyWith({
     String? title,
     int? price,
@@ -36,8 +70,13 @@ class Listing {
     String? number,
     String? included,
     String? description,
+    String? sellerName,
+    String? sellerCollege,
+    String? sellerAvatarUrl,
+    bool? sellerVerified,
     List<String>? images,
     bool? sold,
+    bool? deleted,
   }) => Listing(
     id: id,
     title: title ?? this.title,
@@ -49,9 +88,14 @@ class Listing {
     number: number ?? this.number,
     included: included ?? this.included,
     description: description ?? this.description,
+    sellerName: sellerName ?? this.sellerName,
+    sellerCollege: sellerCollege ?? this.sellerCollege,
+    sellerAvatarUrl: sellerAvatarUrl ?? this.sellerAvatarUrl,
+    sellerVerified: sellerVerified ?? this.sellerVerified,
     images: images ?? this.images,
     owned: owned,
     sold: sold ?? this.sold,
+    deleted: deleted ?? this.deleted,
   );
 }
 

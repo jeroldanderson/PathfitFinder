@@ -6,12 +6,32 @@ import '../services/marketplace_repository.dart';
 class MarketplaceController extends ChangeNotifier {
   MarketplaceController({MarketplaceRepository? repository})
     : _repository = repository ?? MarketplaceRepository();
+
   final MarketplaceRepository _repository;
   final Set<String> _saved = {};
   ListingFilter filter = const ListingFilter();
   String query = '';
   Listing? draft;
+  bool loading = false;
+  String? error;
+
   List<Listing> get all => List.unmodifiable(_repository.listings);
+
+  Future<void> load() async {
+    if (loading) return;
+    loading = true;
+    error = null;
+    notifyListeners();
+    try {
+      await _repository.fetchAll();
+    } catch (_) {
+      error = 'Unable to load listings right now.';
+    } finally {
+      loading = false;
+      notifyListeners();
+    }
+  }
+
   List<Listing> results({ListingFilter? using}) {
     final result = all
         .where(
@@ -39,8 +59,10 @@ class MarketplaceController extends ChangeNotifier {
   }
 
   bool isSaved(String id) => _saved.contains(id);
+
   List<Listing> get saved =>
       all.where((l) => _saved.contains(l.id) && !l.sold).toList();
+
   void toggleSaved(String id) {
     if (!_saved.add(id)) _saved.remove(id);
     notifyListeners();
@@ -61,25 +83,50 @@ class MarketplaceController extends ChangeNotifier {
     notifyListeners();
   }
 
-  void save(Listing value) {
-    final index = _repository.listings.indexWhere((l) => l.id == value.id);
-    if (index < 0) {
-      _repository.listings.insert(0, value);
-    } else {
-      _repository.listings[index] = value;
+  Future<void> save(Listing value) async {
+    final existing = find(value.id);
+    loading = true;
+    error = null;
+    notifyListeners();
+    try {
+      if (existing == null) {
+        await _repository.createListing(value);
+      } else {
+        await _repository.updateListing(value, previous: existing);
+      }
+      draft = null;
+    } on StateError catch (e) {
+      error = e.message;
+      rethrow;
+    } catch (_) {
+      error = 'Could not save listing. Please try again.';
+      rethrow;
+    } finally {
+      loading = false;
+      notifyListeners();
     }
-    draft = null;
-    notifyListeners();
   }
 
-  void markSold(String id) {
-    final l = find(id);
-    if (l != null) save(l.copyWith(sold: true));
+  Future<void> markSold(String id) async {
+    loading = true;
+    notifyListeners();
+    try {
+      await _repository.markAsSold(id);
+    } finally {
+      loading = false;
+      notifyListeners();
+    }
   }
 
-  void delete(String id) {
-    _repository.listings.removeWhere((l) => l.id == id);
-    _saved.remove(id);
+  Future<void> delete(String id) async {
+    loading = true;
     notifyListeners();
+    try {
+      await _repository.softDelete(id);
+      _saved.remove(id);
+    } finally {
+      loading = false;
+      notifyListeners();
+    }
   }
 }

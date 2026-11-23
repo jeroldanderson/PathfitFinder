@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -110,16 +111,19 @@ class PageBody extends StatelessWidget {
   const PageBody({
     super.key,
     required this.child,
-    this.padding = const EdgeInsets.all(24),
+    this.padding = const EdgeInsets.fromLTRB(24, 16, 24, 24),
   });
   final Widget child;
-  final EdgeInsets padding;
+  final EdgeInsetsGeometry padding;
   @override
-  Widget build(BuildContext context) => Align(
-    alignment: Alignment.topCenter,
-    child: ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 600),
-      child: SingleChildScrollView(padding: padding, child: child),
+  Widget build(BuildContext context) => SingleChildScrollView(
+    physics: const AlwaysScrollableScrollPhysics(),
+    padding: padding,
+    child: Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 680),
+        child: child,
+      ),
     ),
   );
 }
@@ -145,24 +149,47 @@ class Photo extends StatelessWidget {
         child: Icon(Icons.image_not_supported_outlined, color: muted),
       ),
     );
+    Widget content;
+    if (path.startsWith('assets/')) {
+      content = Image.asset(
+        path,
+        fit: fit,
+        errorBuilder: (_, _, _) => fallback(),
+      );
+    } else if (path.startsWith('data:image/')) {
+      try {
+        final comma = path.indexOf(',');
+        final bytes = base64Decode(path.substring(comma + 1));
+        content = Image.memory(
+          bytes,
+          fit: fit,
+          gaplessPlayback: true,
+          errorBuilder: (_, _, _) => fallback(),
+        );
+      } catch (_) {
+        content = fallback();
+      }
+    } else if (path.startsWith('http://') || path.startsWith('https://')) {
+      content = Image.network(
+        path,
+        fit: fit,
+        errorBuilder: (_, _, _) => fallback(),
+      );
+    } else {
+      content = FutureBuilder<Uint8List>(
+        future: XFile(path).readAsBytes(),
+        builder: (context, snapshot) => snapshot.hasData
+            ? Image.memory(
+                snapshot.data!,
+                fit: fit,
+                errorBuilder: (_, _, _) => fallback(),
+              )
+            : fallback(),
+      );
+    }
     return ClipRRect(
       borderRadius: BorderRadius.circular(radius),
-      child: SizedBox(
-        width: width,
-        height: height,
-        child: path.startsWith('assets/')
-            ? Image.asset(path, fit: fit, errorBuilder: (_, _, _) => fallback())
-            : FutureBuilder<Uint8List>(
-                future: XFile(path).readAsBytes(),
-                builder: (context, snapshot) => snapshot.hasData
-                    ? Image.memory(
-                        snapshot.data!,
-                        fit: fit,
-                        errorBuilder: (_, _, _) => fallback(),
-                      )
-                    : fallback(),
-              ),
-      ),
+      child: SizedBox(width: width, height: height, child: content),
     );
   }
 }

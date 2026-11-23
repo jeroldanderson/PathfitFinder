@@ -1,6 +1,162 @@
-query ListUsers @auth(level: NO_ACCESS) {
+# 1. Get all users
+query ListUsers @auth(level: PUBLIC) {
   users {
     id
-    username
+    email
+    fullName
+    role
+    collegeOrFaculty
+    batchYear
+    verificationStatus
+  }
+}
+
+# 2. Fetch a single user profile by UST email
+query GetUserByEmail($email: String!) @auth(level: PUBLIC) {
+  users(where: { email: { eq: $email } }, limit: 1) {
+    id
+    email
+    fullName
+    role
+    collegeOrFaculty
+    batchYear
+    verificationStatus
+    avatarUrl
+  }
+}
+
+# 3. Fetch all non-deleted listings with seller info and images
+query GetAllListings @auth(level: PUBLIC) {
+  listings(
+    where: { deletedAt: { isNull: true } }
+    orderBy: [{ createdAt: DESC }]
+  ) {
+    id
+    title
+    description
+    price
+    uniformType
+    size
+    setType
+    previousOwnerGender
+    hasAssignedNumber
+    condition
+    status
+    createdAt
+    seller {
+      id
+      email
+      fullName
+      collegeOrFaculty
+      verificationStatus
+      avatarUrl
+    }
+    images: listingImages_on_listing(orderBy: [{ displayOrder: ASC }]) {
+      id
+      imageUrl
+      isPrimary
+      displayOrder
+    }
+  }
+}
+
+# 4. Fetch all conversations for the current user (as buyer or seller), sorted by lastMessageAt
+query GetUserConversations($userId: UUID!) @auth(level: PUBLIC) {
+  conversations(
+    where: {
+      _or: [
+        { buyerId: { eq: $userId } }
+        { sellerId: { eq: $userId } }
+      ]
+    }
+    orderBy: [{ lastMessageAt: DESC }]
+  ) {
+    id
+    lastMessageAt
+    listing {
+      id
+      title
+      price
+      size
+      condition
+      status
+      deletedAt
+      coverImages: listingImages_on_listing(orderBy: [{ displayOrder: ASC }], limit: 1) {
+        imageUrl
+      }
+    }
+    buyer {
+      id
+      email
+      fullName
+    }
+    seller {
+      id
+      email
+      fullName
+      verificationStatus
+    }
+    messages: messages_on_conversation(orderBy: [{ sentAt: DESC }], limit: 1) {
+      content
+      isRead
+      sentAt
+      sender {
+        id
+      }
+    }
+  }
+}
+
+# 5. Fetch all messages in a conversation
+query GetConversationMessages($conversationId: UUID!) @auth(level: PUBLIC) {
+  messages(
+    where: { conversationId: { eq: $conversationId } }
+    orderBy: [{ sentAt: ASC }]
+  ) {
+    id
+    content
+    isRead
+    sentAt
+    sender {
+      id
+      email
+      fullName
+    }
+  }
+}
+
+# 6. Fetch all notifications for the current user, newest first
+query GetUserNotifications($userId: UUID!) @auth(level: PUBLIC) {
+  notifications(
+    where: { userId: { eq: $userId } }
+    orderBy: [{ createdAt: DESC }]
+  ) {
+    id
+    type
+    title
+    body
+    referenceId
+    isRead
+    createdAt
+  }
+}
+
+# 7. Fetch all pending UST ID / RegForm verification submissions for admins
+query GetPendingVerifications @auth(level: PUBLIC) {
+  verificationSubmissions(
+    where: { status: { eq: PENDING } }
+    orderBy: [{ submittedAt: ASC }]
+  ) {
+    id
+    documentType
+    documentUrl
+    submittedAt
+    user {
+      id
+      email
+      fullName
+      collegeOrFaculty
+      verificationStatus
+    }
   }
 }

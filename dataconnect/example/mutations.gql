@@ -1,4 +1,264 @@
-mutation UpsertUser($username: String!) @auth(level: USER) {
-  # The "auth.uid" server value ensures that users can only register their own user.
-  user_upsert(data: { id_expr: "auth.uid", username: $username })
+mutation CreateUser(
+  $email: String!
+  $fullName: String!
+  $collegeOrFaculty: String
+  $batchYear: Int
+) @auth(level: PUBLIC) {
+  user_insert(
+    data: {
+      email: $email
+      fullName: $fullName
+      collegeOrFaculty: $collegeOrFaculty
+      batchYear: $batchYear
+      verificationStatus: PENDING
+    }
+  )
+}
+
+mutation CreateVerificationSubmission(
+  $userId: UUID!
+  $documentType: VerificationDocType!
+  $documentUrl: String!
+) @auth(level: PUBLIC) {
+  verificationSubmission_insert(
+    data: {
+      userId: $userId
+      documentType: $documentType
+      documentUrl: $documentUrl
+      status: PENDING
+    }
+  )
+}
+
+# 3. Create a uniform listing (keep your existing mutation below)
+mutation CreateListing(
+  $sellerId: UUID!
+  $title: String!
+  $description: String
+  $price: Float!
+  $uniformType: UniformType!
+  $size: UniformSizeType!
+  $setType: UniformSetType!
+  $previousOwnerGender: OwnerGenderType!
+  $hasAssignedNumber: Boolean!
+  $condition: ItemConditionType!
+) @auth(level: PUBLIC) {
+  listing_insert(
+    data: {
+      sellerId: $sellerId
+      title: $title
+      description: $description
+      price: $price
+      uniformType: $uniformType
+      size: $size
+      setType: $setType
+      previousOwnerGender: $previousOwnerGender
+      hasAssignedNumber: $hasAssignedNumber
+      condition: $condition
+    }
+  )
+}
+
+# 4. Attach uploaded image URL to a listing
+mutation CreateListingImage(
+  $listingId: UUID!
+  $imageUrl: String!
+  $isPrimary: Boolean!
+  $displayOrder: Int!
+) @auth(level: PUBLIC) {
+  listingImage_insert(
+    data: {
+      listingId: $listingId
+      imageUrl: $imageUrl
+      isPrimary: $isPrimary
+      displayOrder: $displayOrder
+    }
+  )
+}
+
+# 5. Edit listing fields
+mutation UpdateListing(
+  $id: UUID!
+  $title: String
+  $description: String
+  $price: Float
+  $uniformType: UniformType
+  $size: UniformSizeType
+  $setType: UniformSetType
+  $previousOwnerGender: OwnerGenderType
+  $hasAssignedNumber: Boolean
+  $condition: ItemConditionType
+  $status: ListingStatus
+) @auth(level: PUBLIC) {
+  listing_update(
+    id: $id
+    data: {
+      title: $title
+      description: $description
+      price: $price
+      uniformType: $uniformType
+      size: $size
+      setType: $setType
+      previousOwnerGender: $previousOwnerGender
+      hasAssignedNumber: $hasAssignedNumber
+      condition: $condition
+      status: $status
+    }
+  )
+}
+
+# 6. Audit log entry when a listing is edited
+mutation CreateListingHistory(
+  $listingId: UUID!
+  $changedById: UUID!
+  $fieldName: String!
+  $oldValue: String
+  $newValue: String
+) @auth(level: PUBLIC) {
+  listingHistory_insert(
+    data: {
+      listingId: $listingId
+      changedById: $changedById
+      fieldName: $fieldName
+      oldValue: $oldValue
+      newValue: $newValue
+    }
+  )
+}
+
+# 7. Soft-delete listing (sets deletedAt server-side without erasing the row)
+mutation SoftDeleteListing($id: UUID!) @auth(level: PUBLIC) {
+  listing_update(
+    id: $id
+    data: {
+      deletedAt_expr: "request.time"
+    }
+  )
+}
+
+# 8. Create a conversation between buyer and seller for a listing
+mutation CreateConversation(
+  $listingId: UUID!
+  $buyerId: UUID!
+  $sellerId: UUID!
+) @auth(level: PUBLIC) {
+  conversation_insert(
+    data: {
+      listingId: $listingId
+      buyerId: $buyerId
+      sellerId: $sellerId
+    }
+  )
+}
+
+# 9. Send a message inside a conversation
+mutation SendMessage(
+  $conversationId: UUID!
+  $senderId: UUID!
+  $content: String!
+) @auth(level: PUBLIC) {
+  message_insert(
+    data: {
+      conversationId: $conversationId
+      senderId: $senderId
+      content: $content
+      isRead: false
+    }
+  )
+}
+
+# 10. Bump conversation lastMessageAt when a new message is sent
+mutation UpdateConversationTimestamp($id: UUID!) @auth(level: PUBLIC) {
+  conversation_update(
+    id: $id
+    data: {
+      lastMessageAt_expr: "request.time"
+    }
+  )
+}
+
+# 11. Mark a message as read
+mutation MarkMessageRead($id: UUID!) @auth(level: PUBLIC) {
+  message_update(
+    id: $id
+    data: {
+      isRead: true
+    }
+  )
+}
+
+# 12. Create an in-app notification for a user
+mutation CreateNotification(
+  $userId: UUID!
+  $type: NotificationType!
+  $title: String!
+  $body: String
+  $referenceId: UUID
+) @auth(level: PUBLIC) {
+  notification_insert(
+    data: {
+      userId: $userId
+      type: $type
+      title: $title
+      body: $body
+      referenceId: $referenceId
+      isRead: false
+    }
+  )
+}
+
+# 13. Mark a notification as read
+mutation MarkNotificationRead($id: UUID!) @auth(level: PUBLIC) {
+  notification_update(
+    id: $id
+    data: {
+      isRead: true
+    }
+  )
+}
+
+# 14. Update a user's optional profile picture (Base64 data URI)
+mutation UpdateUserAvatar($id: UUID!, $avatarUrl: String!) @auth(level: PUBLIC) {
+  user_update(
+    id: $id
+    data: {
+      avatarUrl: $avatarUrl
+    }
+  )
+}
+
+# 15. Update a user's optional display name and college/faculty
+mutation UpdateUserProfile(
+  $id: UUID!
+  $fullName: String!
+  $collegeOrFaculty: String
+) @auth(level: PUBLIC) {
+  user_update(
+    id: $id
+    data: {
+      fullName: $fullName
+      collegeOrFaculty: $collegeOrFaculty
+    }
+  )
+}
+
+# 16. Approve or reject a user's UST ID / RegForm verification
+mutation ReviewVerificationSubmission(
+  $userId: UUID!
+  $submissionId: UUID!
+  $status: VerificationStatus!
+) @auth(level: PUBLIC) {
+  user_update(
+    id: $userId
+    data: {
+      verificationStatus: $status
+    }
+  )
+  verificationSubmission_update(
+    id: $submissionId
+    data: {
+      status: $status
+      reviewedAt_expr: "request.time"
+    }
+  )
 }

@@ -78,6 +78,12 @@ class _AuthScreenState extends State<AuthScreen> {
       verificationPath: _document?.path ?? '',
     );
     _password.clear();
+    if(mounted && _controller.authenticated) {
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute<void>(builder: (_) => const MarketplaceScreen()),
+        (_) => false,
+      );
+    }
   }
 
   void _switch() {
@@ -86,7 +92,13 @@ class _AuthScreenState extends State<AuthScreen> {
       Navigator.of(context).pop();
     } else {
       Navigator.of(context).push(
-        MaterialPageRoute<void>(builder: (_) => const AuthScreen(login: true)),
+        MaterialPageRoute<void>(
+          builder: (_) => AuthScreen(
+            login: true,
+            authService: widget.authService,
+            mediaService: widget.mediaService,
+            ),
+          ),
       );
     }
   }

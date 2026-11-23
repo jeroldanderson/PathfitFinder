@@ -1,12 +1,195 @@
-# Example schema for simple movie review app
+# ==========================================
+# ENUMS
+# ==========================================
 
-# User table is keyed by Firebase Auth UID.
-type User @table {
-  # `@default(expr: "auth.uid")` sets it to Firebase Auth UID during insert and upsert.
-  id: String! @default(expr: "auth.uid")
-  username: String! @col(dataType: "varchar(50)")
-  # The `user: User!` field in the Review table generates the following one-to-many query field.
-  #  reviews_on_user: [Review!]!
-  # The `Review` join table the following many-to-many query field.
-  #  movies_via_Review: [Movie!]!
+enum UserRole {
+  STUDENT
+  ALUMNI
+  ADMIN
+}
+
+enum VerificationStatus {
+  UNVERIFIED
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum VerificationDocType {
+  REG_FORM
+  UST_ID
+}
+
+enum ListingStatus {
+  AVAILABLE
+  RESERVED
+  SOLD
+}
+
+enum UniformType {
+  REGULAR_PATHFIT
+  SWIMMING
+  ARNIS
+  MARTIAL_ARTS
+  DANCE
+  TEAM_SPORTS
+  OTHER
+}
+
+enum UniformSetType {
+  COMPLETE_SET
+  TOP_ONLY
+  BOTTOM_ONLY
+}
+
+enum OwnerGenderType {
+  WOMAN_OWNED
+  MAN_OWNED
+}
+
+enum ItemConditionType {
+  BRAND_NEW
+  LIKE_NEW
+  GENTLY_USED
+  USED_WITH_FLAWS
+}
+
+enum UniformSizeType {
+  XS
+  S
+  M
+  L
+  XL
+  SIZE_2XL
+  SIZE_3XL
+}
+
+enum NotificationType {
+  NEW_MESSAGE
+  VERIFICATION_UPDATE
+  PRICE_DROP
+  LISTING_SOLD
+}
+
+# ==========================================
+# TABLES
+# ==========================================
+
+type User @table(name: "users") {
+  id: UUID! @default(expr: "uuidV4()")
+  email: String! @unique @col(dataType: "varchar(255)")
+  fullName: String! @col(name: "full_name", dataType: "varchar(150)")
+  role: UserRole! @default(value: STUDENT)
+  collegeOrFaculty: String @col(name: "college_or_faculty", dataType: "varchar(100)")
+  batchYear: Int @col(name: "batch_year")
+  verificationStatus: VerificationStatus! @default(value: UNVERIFIED) @col(name: "verification_status")
+  avatarUrl: String @col(name: "avatar_url", dataType: "text")
+  createdAt: Timestamp! @default(expr: "request.time") @col(name: "created_at")
+  updatedAt: Timestamp! @default(expr: "request.time") @col(name: "updated_at")
+}
+
+type VerificationSubmission @table(name: "verification_submissions") {
+  id: UUID! @default(expr: "uuidV4()")
+  user: User! @ref
+  documentType: VerificationDocType! @col(name: "document_type")
+  documentUrl: String! @col(name: "document_url", dataType: "text")
+  status: VerificationStatus! @default(value: PENDING)
+  reviewedBy: User @ref
+  rejectionReason: String @col(name: "rejection_reason", dataType: "text")
+  submittedAt: Timestamp! @default(expr: "request.time") @col(name: "submitted_at")
+  reviewedAt: Timestamp @col(name: "reviewed_at")
+}
+
+type Listing
+  @table(name: "listings")
+  @index(fields: ["status", "price"], name: "idx_listings_active_price")
+  @index(
+    fields: [
+      "uniformType"
+      "size"
+      "setType"
+      "previousOwnerGender"
+      "hasAssignedNumber"
+      "condition"
+    ]
+    name: "idx_listings_filters"
+  ) {
+  id: UUID! @default(expr: "uuidV4()")
+  seller: User! @ref
+  title: String! @col(dataType: "varchar(150)")
+  description: String @col(dataType: "text")
+  price: Float!
+  uniformType: UniformType! @col(name: "uniform_type")
+  size: UniformSizeType!
+  setType: UniformSetType! @col(name: "set_type")
+  previousOwnerGender: OwnerGenderType! @col(name: "previous_owner_gender")
+  hasAssignedNumber: Boolean! @default(value: false) @col(name: "has_assigned_number")
+  condition: ItemConditionType!
+  status: ListingStatus! @default(value: AVAILABLE)
+  viewCount: Int! @default(value: 0) @col(name: "view_count")
+  createdAt: Timestamp! @default(expr: "request.time") @col(name: "created_at")
+  updatedAt: Timestamp! @default(expr: "request.time") @col(name: "updated_at")
+  deletedAt: Timestamp @col(name: "deleted_at")
+}
+
+type ListingImage @table(name: "listing_images") {
+  id: UUID! @default(expr: "uuidV4()")
+  listing: Listing! @ref
+  imageUrl: String! @col(name: "image_url", dataType: "text")
+  isPrimary: Boolean! @default(value: false) @col(name: "is_primary")
+  displayOrder: Int! @default(value: 0) @col(name: "display_order")
+  uploadedAt: Timestamp! @default(expr: "request.time") @col(name: "uploaded_at")
+}
+
+type ListingHistory
+  @table(name: "listing_history")
+  @index(fields: ["listingId", "changedAt"], name: "idx_listing_history_time") {
+  id: UUID! @default(expr: "uuidV4()")
+  listing: Listing! @ref
+  changedBy: User @ref
+  fieldName: String! @col(name: "field_name", dataType: "varchar(50)")
+  oldValue: String @col(name: "old_value", dataType: "text")
+  newValue: String @col(name: "new_value", dataType: "text")
+  changedAt: Timestamp! @default(expr: "request.time") @col(name: "changed_at")
+}
+
+type Conversation
+  @table(name: "conversations")
+  @index(
+    fields: ["buyerId", "sellerId", "lastMessageAt"]
+    name: "idx_conversations_participants"
+  ) {
+  id: UUID! @default(expr: "uuidV4()")
+  listing: Listing! @ref
+  buyer: User! @ref
+  seller: User! @ref
+  createdAt: Timestamp! @default(expr: "request.time") @col(name: "created_at")
+  lastMessageAt: Timestamp! @default(expr: "request.time") @col(name: "last_message_at")
+}
+
+type Message
+  @table(name: "messages")
+  @index(fields: ["conversationId", "sentAt"], name: "idx_messages_conversation_time") {
+  id: UUID! @default(expr: "uuidV4()")
+  conversation: Conversation! @ref
+  sender: User! @ref
+  content: String! @col(dataType: "text")
+  isRead: Boolean! @default(value: false) @col(name: "is_read")
+  sentAt: Timestamp! @default(expr: "request.time") @col(name: "sent_at")
+}
+
+type Notification
+  @table(name: "notifications")
+  @index(
+    fields: ["userId", "isRead", "createdAt"]
+    name: "idx_notifications_user_unread"
+  ) {
+  id: UUID! @default(expr: "uuidV4()")
+  user: User! @ref
+  type: NotificationType!
+  title: String! @col(dataType: "varchar(150)")
+  body: String @col(dataType: "text")
+  referenceId: UUID @col(name: "reference_id")
+  isRead: Boolean! @default(value: false) @col(name: "is_read")
+  createdAt: Timestamp! @default(expr: "request.time") @col(name: "created_at")
 }

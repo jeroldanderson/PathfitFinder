@@ -8,8 +8,10 @@ class AuthController extends ChangeNotifier {
   final AuthService _service;
   bool loading = false;
   bool passwordVisible = false;
+  bool authenticated = false;
   String? error;
   bool _disposed = false;
+
   void togglePassword() {
     passwordVisible = !passwordVisible;
     notifyListeners();
@@ -25,6 +27,7 @@ class AuthController extends ChangeNotifier {
     if (loading) return;
     loading = true;
     error = null;
+    authenticated = false;
     notifyListeners();
     try {
       if (registration) {
@@ -39,6 +42,9 @@ class AuthController extends ChangeNotifier {
       } else {
         await _service.login(email: email, password: password);
       }
+      authenticated = true;
+    } on AuthFailure catch (e) {
+      error = e.message;
     } on AuthUnavailable catch (e) {
       error = e.message;
     } catch (_) {

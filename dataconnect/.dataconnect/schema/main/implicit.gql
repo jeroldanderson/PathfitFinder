@@ -1,0 +1,62 @@
+extend type Conversation {
+  """
+  ✨ Implicit foreign key field based on `Conversation`.`buyer`. It must match the value of `User`.`id`. See `@ref` for how to customize it.
+  """
+  buyerId: UUID! @fdc_generated(from: "Conversation.buyer", purpose: IMPLICIT_REF_FIELD)
+  """
+  ✨ Implicit foreign key field based on `Conversation`.`listing`. It must match the value of `Listing`.`id`. See `@ref` for how to customize it.
+  """
+  listingId: UUID! @fdc_generated(from: "Conversation.listing", purpose: IMPLICIT_REF_FIELD)
+  """
+  ✨ Implicit foreign key field based on `Conversation`.`seller`. It must match the value of `User`.`id`. See `@ref` for how to customize it.
+  """
+  sellerId: UUID! @fdc_generated(from: "Conversation.seller", purpose: IMPLICIT_REF_FIELD)
+}
+extend type Listing {
+  """
+  ✨ Implicit foreign key field based on `Listing`.`seller`. It must match the value of `User`.`id`. See `@ref` for how to customize it.
+  """
+  sellerId: UUID! @fdc_generated(from: "Listing.seller", purpose: IMPLICIT_REF_FIELD)
+}
+extend type ListingHistory {
+  """
+  ✨ Implicit foreign key field based on `ListingHistory`.`changedBy`. It must match the value of `User`.`id`. See `@ref` for how to customize it.
+  """
+  changedById: UUID @fdc_generated(from: "ListingHistory.changedBy", purpose: IMPLICIT_REF_FIELD)
+  """
+  ✨ Implicit foreign key field based on `ListingHistory`.`listing`. It must match the value of `Listing`.`id`. See `@ref` for how to customize it.
+  """
+  listingId: UUID! @fdc_generated(from: "ListingHistory.listing", purpose: IMPLICIT_REF_FIELD)
+}
+extend type ListingImage {
+  """
+  ✨ Implicit foreign key field based on `ListingImage`.`listing`. It must match the value of `Listing`.`id`. See `@ref` for how to customize it.
+  """
+  listingId: UUID! @fdc_generated(from: "ListingImage.listing", purpose: IMPLICIT_REF_FIELD)
+}
+extend type Message {
+  """
+  ✨ Implicit foreign key field based on `Message`.`conversation`. It must match the value of `Conversation`.`id`. See `@ref` for how to customize it.
+  """
+  conversationId: UUID! @fdc_generated(from: "Message.conversation", purpose: IMPLICIT_REF_FIELD)
+  """
+  ✨ Implicit foreign key field based on `Message`.`sender`. It must match the value of `User`.`id`. See `@ref` for how to customize it.
+  """
+  senderId: UUID! @fdc_generated(from: "Message.sender", purpose: IMPLICIT_REF_FIELD)
+}
+extend type Notification {
+  """
+  ✨ Implicit foreign key field based on `Notification`.`user`. It must match the value of `User`.`id`. See `@ref` for how to customize it.
+  """
+  userId: UUID! @fdc_generated(from: "Notification.user", purpose: IMPLICIT_REF_FIELD)
+}
+extend type VerificationSubmission {
+  """
+  ✨ Implicit foreign key field based on `VerificationSubmission`.`reviewedBy`. It must match the value of `User`.`id`. See `@ref` for how to customize it.
+  """
+  reviewedById: UUID @fdc_generated(from: "VerificationSubmission.reviewedBy", purpose: IMPLICIT_REF_FIELD)
+  """
+  ✨ Implicit foreign key field based on `VerificationSubmission`.`user`. It must match the value of `User`.`id`. See `@ref` for how to customize it.
+  """
+  userId: UUID! @fdc_generated(from: "VerificationSubmission.user", purpose: IMPLICIT_REF_FIELD)
+}
