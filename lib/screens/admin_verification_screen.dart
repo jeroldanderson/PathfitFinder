@@ -293,6 +293,12 @@ class _AdminVerificationScreenState extends State<AdminVerificationScreen> {
                             children: [
                               Expanded(
                                 child: OutlinedButton(
+                                  style: ButtonStyle(
+                                    minimumSize: Theme.of(context)
+                                        .filledButtonTheme
+                                        .style
+                                        ?.minimumSize,
+                                  ),
                                   onPressed: isBusy
                                       ? null
                                       : () => _review(

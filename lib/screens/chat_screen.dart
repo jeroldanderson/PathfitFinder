@@ -293,8 +293,9 @@ class _ChatScreenState extends State<ChatScreen> {
                       const SizedBox(width: 10),
                       Expanded(
                         child: OutlinedButton(
-                          onPressed: () =>
-                              _text.text = 'Is this uniform still available?',
+                          onPressed: () => _text.text = widget.listing.owned
+                              ? 'Hello, are you interested?'
+                              : 'Is this uniform still available?',
                           child: const Text(
                             'Ask a question',
                             style: TextStyle(fontSize: 10),

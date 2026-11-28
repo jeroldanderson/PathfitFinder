@@ -409,7 +409,7 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
     ),
   );
 
-  Widget _grid(List<Listing> listings) {
+  Widget _grid(List<Listing> listings, {bool centerSingle = false}) {
     if (listings.isEmpty) {
       return const Padding(
         padding: EdgeInsets.symmetric(vertical: 50),
@@ -425,7 +425,9 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
       builder: (context, constraints) {
         final count = constraints.maxWidth > 480 ? 3 : 2;
         final width = (constraints.maxWidth - 16 * (count - 1)) / count;
-        return Wrap(
+        final isCentered = centerSingle && listings.length == 1;
+        final grid = Wrap(
+          alignment: isCentered ? WrapAlignment.center : WrapAlignment.start,
           spacing: 16,
           runSpacing: 18,
           children: listings
@@ -441,6 +443,9 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
               )
               .toList(),
         );
+        return isCentered
+            ? SizedBox(width: constraints.maxWidth, child: grid)
+            : grid;
       },
     );
   }
@@ -469,7 +474,7 @@ class _MarketplaceScreenState extends State<MarketplaceScreen> {
               child: Center(child: Text('Tap a heart to save a uniform.')),
             )
           else
-            _grid(_market.saved),
+            _grid(_market.saved, centerSingle: true),
         ],
       ),
     ),
