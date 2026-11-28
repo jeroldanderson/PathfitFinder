@@ -29,13 +29,20 @@ class AuthValidators {
     return null;
   }
 
+  static final RegExp _ustEmailPattern = RegExp(
+    r'^[a-z0-9]+(\.[a-z0-9]+){1,3}@ust\.edu\.ph$',
+  );
+
   static String? email(String? value) {
-    if (value == null || value.trim().isEmpty) return 'Enter your UST email.';
-    if (!RegExp(
-      r'^[A-Za-z0-9._%+-]+@(?:[A-Za-z0-9-]+\.)*ust\.edu\.ph$',
-      caseSensitive: false,
-    ).hasMatch(value.trim())) {
-      return 'Use a valid UST email (name@ust.edu.ph).';
+    final trimmed = (value ?? '').trim().toLowerCase();
+    if (trimmed.isEmpty) {
+      return 'Enter your UST email address.';
+    }
+    if (!trimmed.endsWith('@ust.edu.ph')) {
+      return 'Must be an official @ust.edu.ph email address.';
+    }
+    if (!_ustEmailPattern.hasMatch(trimmed)) {
+      return 'Use your full UST email (e.g. firstname.lastname.college@ust.edu.ph).';
     }
     return null;
   }

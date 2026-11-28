@@ -1,12 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:pathfitfinder/firebase_options.dart';
-import 'services/notification_service.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:pathfitfinder/firebase_options.dart';
+
 import 'screens/auth_screen.dart';
+import 'screens/email_verification_screen.dart';
 import 'screens/marketplace_screen.dart';
 import 'services/firebase_auth_service.dart';
+import 'services/notification_service.dart';
 import 'theme.dart';
 
 Future<void> main() async {
@@ -35,6 +37,10 @@ class MyApp extends StatelessWidget {
             );
           }
           if (snapshot.hasData) {
+            final user = snapshot.data!;
+            if (!user.emailVerified) {
+              return EmailVerificationScreen(email: user.email ?? '');
+            }
             return const MarketplaceScreen();
           }
           return AuthScreen(authService: authService);

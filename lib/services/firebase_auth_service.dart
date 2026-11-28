@@ -59,6 +59,9 @@ class FirebaseAuthService implements AuthService {
             documentUrl: documentDataUri,
           )
           .execute();
+
+      // 5. Send verification link to the student's @ust.edu.ph inbox
+      await credential.user!.sendEmailVerification();
     } on fb_auth.FirebaseAuthException catch (e) {
       throw AuthFailure(_mapFirebaseAuthError(e));
     } catch (e) {
@@ -76,10 +79,12 @@ class FirebaseAuthService implements AuthService {
   Future<void> login({required String email, required String password}) async {
     final normalizedEmail = email.trim().toLowerCase();
     try {
-      await _auth.signInWithEmailAndPassword(
+      final credential = await _auth.signInWithEmailAndPassword(
         email: normalizedEmail,
         password: password,
       );
+
+      await credential.user?.reload();
 
       final res = await _connector
           .getUserByEmail(email: normalizedEmail)

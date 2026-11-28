@@ -1,12 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../controllers/auth_controller.dart';
 import '../models/auth_models.dart';
-import '../services/media_service.dart';
 import '../services/auth_service.dart';
+import '../services/media_service.dart';
 import '../theme.dart';
 import '../widgets/shared.dart';
+import 'email_verification_screen.dart';
 import 'marketplace_screen.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -33,6 +35,7 @@ class _AuthScreenState extends State<AuthScreen> {
   XFile? _document;
   String? _documentError;
   bool _picking = false;
+
   @override
   void dispose() {
     _username.dispose();
@@ -78,9 +81,17 @@ class _AuthScreenState extends State<AuthScreen> {
       verificationPath: _document?.path ?? '',
     );
     _password.clear();
-    if(mounted && _controller.authenticated) {
+    if (mounted && _controller.authenticated) {
+      final currentUser = FirebaseAuth.instance.currentUser;
+      final isVerifiedEmail = currentUser?.emailVerified ?? false;
       Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute<void>(builder: (_) => const MarketplaceScreen()),
+        MaterialPageRoute<void>(
+          builder: (_) => isVerifiedEmail
+              ? const MarketplaceScreen()
+              : EmailVerificationScreen(
+                  email: _email.text.trim().toLowerCase(),
+                ),
+        ),
         (_) => false,
       );
     }
@@ -97,8 +108,8 @@ class _AuthScreenState extends State<AuthScreen> {
             login: true,
             authService: widget.authService,
             mediaService: widget.mediaService,
-            ),
           ),
+        ),
       );
     }
   }
@@ -171,7 +182,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       textInputAction: TextInputAction.next,
                       autofillHints: const [AutofillHints.email],
                       decoration: const InputDecoration(
-                        hintText: 'yourname@ust.edu.ph',
+                        hintText: 'firstname.lastname.college@ust.edu.ph',
                       ),
                     ),
                   ),
@@ -365,6 +376,7 @@ class _AuthScreenState extends State<AuthScreen> {
       ),
     ),
   );
+
   Widget _uploadButton(String label, String icon, VoidCallback onTap) =>
       Material(
         color: Colors.white,
